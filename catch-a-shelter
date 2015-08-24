@@ -2,10 +2,12 @@
 
 require 'capybara'
 require 'capybara/webkit'
-require 'csv'
 
 include Capybara::DSL
 Capybara.default_driver = :webkit
+page.driver.block_unknown_urls
+page.driver.allow_url "https://www.mrlodge.com/*"
+#page.driver.block_unknown_urls
 visit "https://www.mrlodge.com/search/"
 fill_in('mrl_ft_sterm', :with => 'Dingolfinger')
 fill_in('mrl_ft_rent_to', :with => '1400')

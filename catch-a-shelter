@@ -1,13 +1,11 @@
 #!/usr/bin/env ruby
 
 require 'capybara'
-require 'capybara/webkit'
+require 'capybara/poltergeist'
 
 include Capybara::DSL
-Capybara.default_driver = :webkit
-page.driver.block_unknown_urls
-page.driver.allow_url "https://www.mrlodge.com/*"
-#page.driver.block_unknown_urls
+Capybara.current_driver = :poltergeist
+
 visit "https://www.mrlodge.com/search/"
 fill_in('mrl_ft_sterm', :with => 'Dingolfinger')
 fill_in('mrl_ft_rent_to', :with => '1400')

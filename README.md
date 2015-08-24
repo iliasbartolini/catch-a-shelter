@@ -1,7 +1,13 @@
 Install
 -------
-Requires capybara
 
+Requires phantomjs
+```
+apt-get install phantomjs
+brew install phantomjs
+```
+
+Setup Ruby environment
 ```
 gem install bundler
 

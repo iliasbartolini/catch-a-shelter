@@ -1,36 +1,53 @@
 #!/usr/bin/env ruby
 
 require 'capybara'
+require 'capybara/dsl'
 require 'capybara/poltergeist'
+require 'selenium-webdriver'
 
 include Capybara::DSL
+
+# Capybara.register_driver :selenium do |app|
+#   Capybara::Selenium::Driver.new(
+#     app,
+#     browser: :firefox,
+#     desired_capabilities: Selenium::WebDriver::Remote::Capabilities.firefox(marionette: false)
+#   )
+# end
 Capybara.current_driver = :poltergeist
-
-visit "https://www.mrlodge.com/search/"
-fill_in('mrl_ft_sterm', :with => 'Dingolfinger')
-fill_in('mrl_ft_rent_to', :with => '1400')
-#select('1.5', :from => 'mrl_ft_rooms_from')
-select('***', :from => 'mrl_ft_category')
-click_on('Show offers')
+Capybara.default_max_wait_time = 5 
 
 
-all("div.mrl-ft-list-row").each do |offer|
-    title = offer.find("h3.mrl-headline").text
-    id = offer["data-uid".to_sym]
-    availability = offer.find("span.mrl-avail").text
-    distance = offer.find("span.mrl-distance").text
-    is_new = offer.has_css?("span.mrl-ft-lstat")
-    rent = offer.find("dt.mrl-rent").text
-    size = offer.find("dt.mrl-area").text
-    stars = offer.all(".i i_star").size
 
-    if (not (availability.include? "6-" or availability.include? " 6 months"))
-	    puts ""
-	    puts ((is_new) ? "***NEW*** " : "") + title + " [" + rent + "]"
-	    puts availability
-	    puts stars
-	    puts size
-	    puts distance
-	    puts "https://www.mrlodge.com/search/detailed-view/"+id
-	end
+visit "https://www.idealista.com/alquiler-viviendas/barcelona/sant-marti/con-precio-hasta_1800,precio-desde_1300,de-tres-dormitorios,de-cuatro-cinco-habitaciones-o-mas,dos-banos,tres-banos-o-mas/?ordenado-por=fecha-publicacion-desc"
+
+page.execute_script "window.scrollBy(0,10000)"
+page.execute_script "window.scrollBy(0,-10000)"
+
+all(".items-container article").each do |offer|
+    puts offer.text
+
+    is_adv = (not offer["class"].nil?)
+    puts is_adv
+    
+    if not is_adv
+      title = offer.find("a.item-link ").text
+    #     # id = offer["data-uid".to_sym]
+    #     # availability = offer.find("span.mrl-avail").text
+    #     # distance = offer.find("span.mrl-distance").text
+    #     # is_new = offer.has_css?("span.mrl-ft-lstat")
+    #     rent = offer.find("span.item-price").text
+    #     # size = offer.find("dt.mrl-area").text
+    #     # stars = offer.all(".i i_star").size
+          link = offer.find("a.item-link ")["href".to_sym]
+    #     # puts ((is_new) ? "***NEW*** " : "") + title + " [" + rent + "]"
+    #     puts title + " [" + rent + "]"
+    #     # puts availability
+    #     # puts stars
+    #     # puts size
+    #     # puts distance
+    #     puts link
+        puts ""
+    end
+
 end
